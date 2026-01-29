@@ -1,0 +1,16 @@
+body{
+	background: lightblue;
+}
+
+#messages{
+	border: solid;
+	margin: 10%;
+	padding: 4em;
+}
+
+#addMessageForm{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
