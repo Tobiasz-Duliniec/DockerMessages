@@ -1,5 +1,5 @@
 function add_message(response){
-	//funkcja dodaje wiadomość do tabelki, jeśli została ona pomyślnie zapisana w bazie danych
+	//Add saved message to the table
 	var noMessagesParagraph = document.getElementById('no-messages');
 	if(noMessagesParagraph != null){
 		noMessagesParagraph.remove();
@@ -26,7 +26,7 @@ function add_message(response){
 }
 
 async function sendData(){
-	//wysłanie danych z formularza na serwer
+	//API call to add new message
 	const postForm = document.getElementById("addMessageForm");
 	const dane = new FormData(postForm);
 	var response = await fetch('/api/add', {
