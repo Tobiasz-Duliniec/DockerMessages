@@ -6,6 +6,7 @@
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link rel="stylesheet" href="/style.css">
 		<script src="{{url_for('router.send_formHandler')}}" defer></script>
+		<meta name="author" content="Tobiasz Duliniec, Przemysław Maćkowiak">
 		<title>Docker Messages</title>
 	</head>
 	<body>
@@ -34,7 +35,7 @@
 						<textarea name="message" id="messageField" placeholder="Write something..." required></textarea>
 					</div>
 					<div class="actions">
-						<button type="reset" class="btn secondary">Reset</button>
+						<button type="reset" class="btn secondary">Reset form</button>
 						<button type="submit" class="btn" id="submitBtn">Add message</button>
 					</div>
 					<p id="form-status" class="meta" role="status" aria-live="polite" style="margin-top:8px"></p>
