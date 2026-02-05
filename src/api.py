@@ -29,11 +29,18 @@ def add_message():
         return jsonify({'response code': 400, 'status': 'You must provide both the username and the message'}), 400
     if ((message_length := len(message)) > max_message_length):
         return jsonify({'response code': 400, 'status': f'Max message length is {max_message_length}, yours was {message_length}'}), 400
+    status = None
     date = datetime.datetime.now(datetime.timezone.utc).strftime('%d/%m/%Y, %H:%M:%S (%Z)')
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
             cur.execute('INSERT INTO messages(message, username, date) VALUES (%s, %s, %s)', (message, username, date))
+        status = True
+    except Exception:
+        status = False
     finally:
         conn.close()
-    return jsonify({'response code': 200, 'message': message, 'username': username, 'date': date})
+    if(status):
+        return jsonify({'response code': 200, 'message': message, 'username': username, 'date': date})
+    else:
+        return jsonify({'response code': 500, 'status': 'Something went wrong when saving your message.'}), 500
