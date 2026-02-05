@@ -1,46 +1,64 @@
 function add_message(response){
-	//Add saved message to the table
-	var noMessagesParagraph = document.getElementById('no-messages');
-	if(noMessagesParagraph != null){
-		noMessagesParagraph.remove();
-	}
-	
-	messageDiv = document.createElement('div');
-	messageDiv.setAttribute('class', 'message');
-	
-	dateParagraph = document.createElement('p');
-	dateParagraph.innerText = 'Date: ' + response['date'];
+	const noMessagesParagraph = document.getElementById('no-messages');
+	if(noMessagesParagraph) noMessagesParagraph.remove();
 
-	authorParagraph = document.createElement('p');
-	authorParagraph.innerText = 'Author: ' + response['username'];
-	
-	messageParagraph = document.createElement('p');
-	messageParagraph.innerText = response['message'];
-	
-	messageDiv.appendChild(dateParagraph);
-	messageDiv.appendChild(authorParagraph);
-	messageDiv.appendChild(messageParagraph);
-	
-	messageList = document.getElementById('messages');
+	const messageDiv = document.createElement('article');
+	messageDiv.className = 'message';
+	messageDiv.setAttribute('aria-label', `Message by ${response.username}`);
+
+	const meta = document.createElement('p');
+	meta.className = 'meta';
+	meta.innerHTML = `${response.date} — <strong>${escapeHtml(response.username)}</strong>`;
+
+	const body = document.createElement('p');
+	body.innerText = response.message;
+
+	messageDiv.appendChild(meta);
+	messageDiv.appendChild(body);
+
+	const messageList = document.getElementById('messages');
 	messageList.prepend(messageDiv);
 }
 
-async function sendData(){
-	//API call to add new message
-	const postForm = document.getElementById("addMessageForm");
-	const dane = new FormData(postForm);
-	var response = await fetch('/api/add', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(Object.fromEntries(dane))
-	}
-	);
-	response = await response.json();
-	if(response['response code'] === 200){
-		add_message(response);
-	}else{
-		alert(response['status']);
+function escapeHtml(str){
+	return String(str).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]});
+}
+
+async function submitHandler(e){
+	e.preventDefault();
+	const form = document.getElementById('addMessageForm');
+	const status = document.getElementById('form-status');
+	const submitBtn = document.getElementById('submitBtn');
+
+	const formData = new FormData(form);
+	const payload = Object.fromEntries(formData.entries());
+
+	submitBtn.disabled = true;
+	status.textContent = 'Sending...';
+
+	try{
+		const res = await fetch('/api/add', {
+			method: 'POST',
+			headers: {'Content-Type':'application/json'},
+			body: JSON.stringify(payload)
+		});
+		const json = await res.json();
+		if(json['response code'] === 200){
+			add_message(json);
+			form.reset();
+			status.textContent = 'Message added';
+		} else {
+			status.textContent = json['status'] || 'Error saving message';
+		}
+	}catch(err){
+		status.textContent = 'Network error';
+	}finally{
+		submitBtn.disabled = false;
+		setTimeout(()=>{status.textContent=''},3000);
 	}
 }
+
+document.addEventListener('DOMContentLoaded', ()=>{
+	const form = document.getElementById('addMessageForm');
+	if(form) form.addEventListener('submit', submitHandler);
+});

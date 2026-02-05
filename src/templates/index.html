@@ -6,28 +6,53 @@
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link rel="stylesheet" href="/style.css">
 		<script src="{{url_for('router.send_formHandler')}}" defer></script>
-		<title>Projekt zaliczeniowy</title>
+		<title>Docker Messages</title>
 	</head>
 	<body>
-		<form id="addMessageForm">
-			<label for="usernameField">Username:</label>
-			<input type="text" name="username" id="usernameField" placeholder="username">
-			<label for="messageField">Message:</label>
-			<input type="text" name="message" id="messageField" placeholder="message">
-			<input type="button" onclick=sendData() value="Add message">
-		</form>
-		<div id="messages">
-			{% if messages|length == 0 %}
-				<p id="no-messages">There are no messages</p>
-			{% else %}
-				{% for message in messages|reverse %}
-				<div class="message">
-				<p>Date: {{message[2]}}</p>
-				<p>Author: {{message[1]}}</p>
-				<p>{{message[0]}}</p>
+		<div class="container">
+			<header class="header">
+				<div class="brand">
+					<svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+						<rect width="24" height="24" rx="6" fill="#2563eb" />
+						<path d="M6 12h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+					</svg>
+					<div>
+						<h1>Docker Messages</h1>
+						<p>Small message board</p>
+					</div>
 				</div>
-				{% endfor %}
-			{% endif %}
+			</header>
+
+			<section class="panel">
+				<form id="addMessageForm" aria-label="Add message form">
+					<div class="form-row">
+						<label for="usernameField">Username</label>
+						<input type="text" name="username" id="usernameField" placeholder="Your name" required>
+					</div>
+					<div class="form-row">
+						<label for="messageField">Message</label>
+						<textarea name="message" id="messageField" placeholder="Write something..." required></textarea>
+					</div>
+					<div class="actions">
+						<button type="reset" class="btn secondary">Reset</button>
+						<button type="submit" class="btn" id="submitBtn">Add message</button>
+					</div>
+					<p id="form-status" class="meta" role="status" aria-live="polite" style="margin-top:8px"></p>
+				</form>
+
+				<div id="messages">
+					{% if messages|length == 0 %}
+						<p id="no-messages" class="meta">There are no messages</p>
+					{% else %}
+						{% for message in messages|reverse %}
+							<article class="message" aria-label="Message by {{message[1]}}">
+								<p class="meta">{{message[2]}} — <strong>{{message[1]}}</strong></p>
+								<p>{{message[0]}}</p>
+							</article>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</section>
 		</div>
 	</body>
 </html>
