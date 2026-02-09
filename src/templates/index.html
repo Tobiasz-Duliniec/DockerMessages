@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="icon" href="/favicon.ico" type="image/x-icon">
-		<link rel="stylesheet" href="/style.css">
+		<link rel="icon" href="{{url_for('router.send_favicon')}}" type="image/x-icon">
+		<link rel="stylesheet" href="{{url_for('router.send_css')}}">
 		<script src="{{url_for('router.send_formHandler')}}" defer></script>
 		<meta name="author" content="Tobiasz Duliniec, Przemysław Maćkowiak">
 		<title>Docker Messages</title>
