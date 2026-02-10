@@ -42,8 +42,11 @@
 				</form>
 
 				<div id="messages">
+					{% if messages is not defined %}
+						<p class="meta">An error occured while fetching messages from the database</p>
+					{% endif %}
 					{% if messages|length == 0 %}
-						<p id="no-messages" class="meta">There are no messages</p>
+						<p id="no-messages" class="meta">There are no messages to display</p>
 					{% else %}
 						{% for message in messages|reverse %}
 							<article class="message" aria-label="Message by {{message[1]}}">

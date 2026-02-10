@@ -32,12 +32,15 @@ def get_db_connection():
 
 @router.route('/')
 def index():
-    conn = get_db_connection()
     try:
+        conn = get_db_connection()
         cur = conn.cursor()
         cur.execute('SELECT message, username, date FROM messages')
         messages = cur.fetchall()
         cur.close()
+        raise Exception
+    except Exception:
+        return render_template('index.html')
     finally:
         conn.close()
     return render_template('index.html', messages=messages)
