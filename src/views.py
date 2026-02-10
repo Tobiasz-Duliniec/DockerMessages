@@ -38,7 +38,6 @@ def index():
         cur.execute('SELECT message, username, date FROM messages')
         messages = cur.fetchall()
         cur.close()
-        raise Exception
     except Exception:
         return render_template('index.html')
     finally:
